@@ -42,4 +42,4 @@ RUN chown -R nobody: /app
 USER nobody
 
 ENV HOME=/app
-CMD ["/app/bonsaika/bin/bonsaika", "start"]
+ENTRYPOINT ["/app/bonsaika/bin/bonsaika", "start"]

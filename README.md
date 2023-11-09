@@ -1,4 +1,5 @@
 # bonsaika
+[![Docker build](https://github.com/xHain-hackspace/bonsaika/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/xHain-hackspace/bonsaika/actions/workflows/docker-publish.yml)
 
 >Bonsaika, derived from the Japanese words "Bonsai" (盆栽), meaning tray planting, and "ka" (家), denoting a person or specialist, refers to individuals devoted to the meticulous care, cultivation, and artistic refinement of Bonsai trees.
 
