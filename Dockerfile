@@ -40,7 +40,6 @@ WORKDIR /app
 
 # copy release to app container
 COPY --from=build /app/_build/prod/rel/bonsaika .
-COPY entrypoint.sh .
 RUN chown -R nobody: /app
 USER nobody
 
