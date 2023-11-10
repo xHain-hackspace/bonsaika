@@ -1,9 +1,17 @@
 defmodule Authentik do
+  require Logger
   use Tesla
 
   plug(Tesla.Middleware.JSON)
-  plug(Tesla.Middleware.BearerAuth, token: System.fetch_env!("BONSAIKA_AUTHENTIK_TOKEN"))
-  plug(Tesla.Middleware.BaseUrl, System.fetch_env!("BONSAIKA_AUTHENTIK_SERVER") <> "/api/v3/")
+
+  plug(
+    Tesla.Middleware.BaseUrl,
+    Application.get_env(:bonsaika, :authentik_server) <> "/api/v3/"
+  )
+
+  plug(Tesla.Middleware.BearerAuth,
+    token: Application.get_env(:bonsaika, :authentik_token)
+  )
 
   def list_members() do
     member_group()
@@ -14,7 +22,7 @@ defmodule Authentik do
   end
 
   defp member_group() do
-    # there should be only one result
+    # there should be only one result when searching for 'member' group
     get!("/core/groups/", query: [name: "member"]).body
     |> Map.fetch!("results")
     |> Enum.at(0)
@@ -32,7 +40,9 @@ defmodule Authentik do
   end
 
   defp external_matrix_account(user) do
-    case user |> Map.fetch!("attributes") |> Map.fetch("external-matrix-account") do
+    case user
+         |> Map.fetch!("attributes")
+         |> Map.fetch("external-matrix-account") do
       {:ok, value} when value != "" ->
         {:ok, value}
 
