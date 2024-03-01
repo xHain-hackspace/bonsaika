@@ -1,4 +1,4 @@
-defmodule Authentik do
+defmodule Bonsaika.Authentik do
   require Logger
   use Tesla
 
@@ -6,11 +6,11 @@ defmodule Authentik do
 
   plug(
     Tesla.Middleware.BaseUrl,
-    Application.get_env(:bonsaika, :authentik_server) <> "/api/v3/"
+    Application.fetch_env!(:bonsaika, :authentik_server) <> "/api/v3/"
   )
 
   plug(Tesla.Middleware.BearerAuth,
-    token: Application.get_env(:bonsaika, :authentik_token)
+    token: Application.fetch_env!(:bonsaika, :authentik_token)
   )
 
   def list_members() do
@@ -30,24 +30,18 @@ defmodule Authentik do
 
   defp matrix_user(user) do
     case external_matrix_account(user) do
-      {:ok, value} ->
+      {:ok, value} when value != "" ->
         value
 
-      {:error} ->
+      _ ->
         username = Map.fetch!(user, "username")
         "@" <> username <> ":x-hain.de"
     end
   end
 
   defp external_matrix_account(user) do
-    case user
-         |> Map.fetch!("attributes")
-         |> Map.fetch("external-matrix-account") do
-      {:ok, value} when value != "" ->
-        {:ok, value}
-
-      _ ->
-        {:error}
-    end
+    user
+    |> Map.fetch!("attributes")
+    |> Map.fetch("external-matrix-account")
   end
 end

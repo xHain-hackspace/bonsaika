@@ -1,4 +1,4 @@
-FROM elixir:1.15-alpine as build
+FROM elixir:1.16-alpine as build
 
 RUN mkdir /app
 WORKDIR /app
@@ -6,7 +6,6 @@ WORKDIR /app
 RUN mix do local.hex --force, local.rebar --force
 
 ENV MIX_ENV=prod
-
 
 # install mix dependencies
 COPY mix.exs mix.lock ./
