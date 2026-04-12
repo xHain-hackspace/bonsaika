@@ -17,4 +17,7 @@ You need to define the following environment variables to run bonsaika.
 | ------------------------- | ----------------------------------------------------------- |
 | BONSAIKA_AUTHENTIK_SERVER | The url of the authentik server (`https://login.x-hain.de`) |
 | BONSAIKA_AUTHENTIK_TOKEN  | The token needed to authenticate at the authentik server    |
+| BONSAIKA_MATRIX_SERVER    | the url of the matrix server                                |
+| BONSAIKA_MATRIX_TOKEN     | The token needed to authenticate at the matrix server       |
+| BONSAIKA_MATRIX_ROOM      | The matrix room managed by bonsakai                         |
 
