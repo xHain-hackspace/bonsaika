@@ -27,7 +27,7 @@ RUN mix release
 FROM alpine:3.18 AS app
 
 # install runtime dependencies
-RUN apk add --update bash
+RUN apk add --update bash && apk add libstdc++ openssl ca-certificates
 
 ENV MIX_ENV=prod
 
@@ -42,4 +42,4 @@ RUN chown -R nobody: /app
 USER nobody
 
 ENV HOME=/app
-ENTRYPOINT ["/app/bonsaika/bin/bonsaika", "start"]
+ENTRYPOINT ["/app/bin/bonsaika", "start"]
