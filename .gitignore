@@ -26,3 +26,7 @@ bonsaika-*.tar
 /tmp/
 
 .envrc
+
+.env
+
+etc
