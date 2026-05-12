@@ -23,7 +23,7 @@ defmodule Bonsaika.Matrix do
     Application.fetch_env!(:bonsaika, :matrix_room)
   end 
 
-  def matrix_space do
+  defp matrix_space do
     Application.fetch_env!(:bonsaika, :matrix_space)
   end
 
