@@ -3,9 +3,6 @@ defmodule Bonsaika.Matrix do
   use Tesla
 
 
-  #matrix_room() "!tEcFveHLxHVMbnJfzd:x-hain.de"
-  #matrix_space() "!arxhuIqDlLsPcBpmqU:x-hain.de"
-
   plug(Tesla.Middleware.JSON)
   plug(Tesla.Middleware.PathParams)
   plug(Tesla.Middleware.Query)
