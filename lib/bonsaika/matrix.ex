@@ -2,11 +2,6 @@ defmodule Bonsaika.Matrix do
   require Logger
   use Tesla
 
-  # @matrix_room Application.fetch_env!(:bonsaika, :matrix_room)
-  # @matrix_space Application.compile_env!(:bonsaika, :matrix_space)
-
-  @matrix_room "!tEcFveHLxHVMbnJfzd:x-hain.de"
-  @matrix_space "!arxhuIqDlLsPcBpmqU:x-hain.de"
 
   plug(Tesla.Middleware.JSON)
   plug(Tesla.Middleware.PathParams)
@@ -21,12 +16,20 @@ defmodule Bonsaika.Matrix do
     token: Application.fetch_env!(:bonsaika, :matrix_token)
   )
 
+  defp matrix_room() do
+    Application.fetch_env!(:bonsaika, :matrix_room)
+  end 
+
+  defp matrix_space() do
+    Application.fetch_env!(:bonsaika, :matrix_space)
+  end
+
   def list_members() do
     room =
-      if is_room_id(@matrix_room) do
-        @matrix_room
+      if is_room_id(matrix_room()) do
+        matrix_room()
       else
-        resolve_room_alias(@matrix_room)
+        resolve_room_alias(matrix_room())
       end
 
     left = get_left_users(room) |> Jason.encode!()
@@ -40,7 +43,7 @@ defmodule Bonsaika.Matrix do
       user_id: matrix_user
     }
 
-    post!("/rooms/#{@matrix_space}/invite", body)
+    post!("/rooms/#{matrix_space()}/invite", body)
   end
 
   def invite_to_room(matrix_user) do
@@ -50,7 +53,7 @@ defmodule Bonsaika.Matrix do
 
     Logger.info("Inviting #{matrix_user}")
 
-    post!("/rooms/#{@matrix_room}/invite", body) |> dbg()
+    post!("/rooms/#{matrix_room()}/invite", body) |> dbg()
   end
 
   def kick_from_room(matrix_user) do
@@ -60,7 +63,7 @@ defmodule Bonsaika.Matrix do
     }
 
     %Tesla.Env{status: 200} =
-      put!("/rooms/#{@matrix_room}/state/m.room.member/#{matrix_user}", body)
+      put!("/rooms/#{matrix_room()}/state/m.room.member/#{matrix_user}", body)
   end
 
   defp get_joined_users(room) do
