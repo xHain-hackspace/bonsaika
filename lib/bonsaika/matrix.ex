@@ -20,10 +20,6 @@ defmodule Bonsaika.Matrix do
     Application.fetch_env!(:bonsaika, :matrix_room)
   end 
 
-  defp matrix_space() do
-    Application.fetch_env!(:bonsaika, :matrix_space)
-  end
-
   def list_members() do
     room =
       if is_room_id(matrix_room()) do
@@ -32,18 +28,7 @@ defmodule Bonsaika.Matrix do
         resolve_room_alias(matrix_room())
       end
 
-    left = get_left_users(room) |> Jason.encode!()
-    File.write!("left.json", left)
-
     {get_joined_users(room), get_invited_users(room)}
-  end
-
-  def invite_to_space(matrix_user) do
-    body = %{
-      user_id: matrix_user
-    }
-
-    post!("/rooms/#{matrix_space()}/invite", body)
   end
 
   def invite_to_room(matrix_user) do
@@ -53,7 +38,7 @@ defmodule Bonsaika.Matrix do
 
     Logger.info("Inviting #{matrix_user}")
 
-    post!("/rooms/#{matrix_room()}/invite", body) |> dbg()
+    post!("/rooms/#{matrix_room()}/invite", body)
   end
 
   def kick_from_room(matrix_user) do
@@ -75,15 +60,6 @@ defmodule Bonsaika.Matrix do
   defp get_invited_users(room) do
     %Tesla.Env{status: 200, body: body} =
       get!("/rooms/" <> room <> "/members", query: [membership: "invite"])
-
-    body
-    |> Map.get("chunk")
-    |> extract_matrix_users()
-  end
-
-  defp get_left_users(room) do
-    %Tesla.Env{status: 200, body: body} =
-      get!("/rooms/" <> room <> "/members", query: [membership: "leave"])
 
     body
     |> Map.get("chunk")
