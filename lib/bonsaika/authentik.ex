@@ -22,8 +22,10 @@ defmodule Bonsaika.Authentik do
   end
 
   defp member_group() do
-    # there should be only one result when searching for 'member' group
-    get!("/core/groups/", query: [name: "member"]).body
+    group = Application.fetch_env!(:bonsaika, :authentik_group)
+
+    # there should be only one result when searching for the group
+    get!("/core/groups/", query: [name: group]).body
     |> Map.fetch!("results")
     |> Enum.at(0)
   end
