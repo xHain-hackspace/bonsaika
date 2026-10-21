@@ -63,7 +63,7 @@ defmodule Bonsaika.Matrix do
   end
 
   defp resolve_room_alias(room_alias) do
-    room_alias = URI.encode(room_alias, &(&1 != ?#))
+    # PathParams takes care of encoding the alias
     params = [room_alias: room_alias]
 
     %Tesla.Env{status: 200, body: body} =
