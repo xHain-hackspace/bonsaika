@@ -19,6 +19,9 @@ defmodule Bonsaika do
     Logger.info("To be added: #{users_to_add |> Jason.encode!()}")
     Logger.info("To be removed: #{users_to_remove |> Jason.encode!()}")
 
+    # add to space
+    Enum.map(users_to_add, &Matrix.invite_to_space/1)
+
     # add to room
     Enum.map(users_to_add, &Matrix.invite_to_room/1)
 

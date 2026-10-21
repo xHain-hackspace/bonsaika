@@ -1,10 +1,11 @@
 defmodule BonsaikaTest do
-  # not async, because the room alias test changes the application env
+  # not async, because the alias tests change the application env
   use ExUnit.Case, async: false
 
   alias Bonsaika.Test.{AuthentikMock, MatrixMock, ServiceMock}
 
   @room MatrixMock.room_id()
+  @space "!space:x-hain.de"
 
   describe "update_matrix_room/0" do
     test "invites authentik members that are not in the room" do
@@ -16,6 +17,7 @@ defmodule BonsaikaTest do
 
       Bonsaika.update_matrix_room()
 
+      assert_received {:matrix, :invite, @space, "@bob:x-hain.de"}
       assert_received {:matrix, :invite, @room, "@bob:x-hain.de"}
       refute_received {:matrix, :invite, _, "@alice:x-hain.de"}
       refute_received {:matrix, :kick, _, _}
@@ -87,7 +89,7 @@ defmodule BonsaikaTest do
     end
 
     test "resolves a room alias to its room id" do
-      room_alias = "#members:x-hain.de"
+      room_alias = "#room:x-hain.de"
       previous = Application.fetch_env!(:bonsaika, :matrix_room)
       Application.put_env(:bonsaika, :matrix_room, room_alias)
       on_exit(fn -> Application.put_env(:bonsaika, :matrix_room, previous) end)
@@ -98,6 +100,20 @@ defmodule BonsaikaTest do
 
       assert_received {:matrix, :resolve_alias, ^room_alias}
       assert_received {:matrix, :invite, @room, "@alice:x-hain.de"}
+    end
+
+    test "resolves a space alias to its room id" do
+      space_alias = "#space:x-hain.de"
+      previous = Application.fetch_env!(:bonsaika, :matrix_space)
+      Application.put_env(:bonsaika, :matrix_space, space_alias)
+      on_exit(fn -> Application.put_env(:bonsaika, :matrix_space, previous) end)
+
+      setup_mocks([AuthentikMock.user("alice")], [], [])
+
+      Bonsaika.update_matrix_room()
+
+      assert_received {:matrix, :resolve_alias, ^space_alias}
+      assert_received {:matrix, :invite, @space, "@alice:x-hain.de"}
     end
   end
 

@@ -4,7 +4,8 @@ defmodule Bonsaika.Test.MatrixMock do
 
   Invites and kicks are sent to the calling process as
   `{:matrix, :invite, room, user}` and `{:matrix, :kick, room, user}`.
-  Room aliases are resolved to `room_id/0` and reported as
+  Room aliases are resolved by swapping the leading `#` for `!`, so
+  `#room:x-hain.de` resolves to `room_id/0`, and are reported as
   `{:matrix, :resolve_alias, room_alias}`.
   """
 
@@ -24,7 +25,8 @@ defmodule Bonsaika.Test.MatrixMock do
      fn
        :get, "/directory/room/" <> room_alias, _env ->
          send(test_pid, {:matrix, :resolve_alias, room_alias})
-         json(%{"room_id" => @room_id})
+         "#" <> name = room_alias
+         json(%{"room_id" => "!" <> name})
 
        :get, "/rooms/" <> @room_id <> "/members", env ->
          users =

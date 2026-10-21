@@ -14,4 +14,5 @@ config :bonsaika,
   matrix_server: "https://matrix.test",
   matrix_token: "token",
   matrix_room: "!room:x-hain.de",
+  matrix_space: "!space:x-hain.de",
   whitelist: ["@bot:x-hain.de"]

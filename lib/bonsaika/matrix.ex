@@ -20,6 +20,14 @@ defmodule Bonsaika.Matrix do
     {get_joined_users(room), get_invited_users(room)}
   end
 
+  def invite_to_space(matrix_user) do
+    body = %{
+      user_id: matrix_user
+    }
+
+    post!("/rooms/#{matrix_space()}/invite", body)
+  end
+
   def invite_to_room(matrix_user) do
     body = %{
       user_id: matrix_user
@@ -80,8 +88,14 @@ defmodule Bonsaika.Matrix do
   end
 
   defp matrix_room() do
-    input = Application.fetch_env!(:bonsaika, :matrix_room)
+    Application.fetch_env!(:bonsaika, :matrix_room) |> to_room_id()
+  end
 
+  defp matrix_space() do
+    Application.fetch_env!(:bonsaika, :matrix_space) |> to_room_id()
+  end
+
+  defp to_room_id(input) do
     if is_room_id(input) do
       input
     else

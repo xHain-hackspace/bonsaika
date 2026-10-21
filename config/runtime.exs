@@ -9,6 +9,7 @@ if config_env() != :test do
     matrix_server: System.fetch_env!("BONSAIKA_MATRIX_SERVER"),
     matrix_token: System.fetch_env!("BONSAIKA_MATRIX_TOKEN"),
     matrix_room: System.fetch_env!("BONSAIKA_MATRIX_ROOM"),
+    matrix_space: System.fetch_env!("BONSAIKA_MATRIX_SPACE"),
     whitelist:
       "BONSAIKA_WHITELIST"
       |> System.fetch_env!()
