@@ -7,7 +7,7 @@ defmodule Bonsaika do
     Logger.info("Running update of the member channel")
     authentik_members = Authentik.list_members() |> Enum.uniq() |> Enum.sort()
     {joined, invited} = Matrix.list_members()
-    matrix_members = (joined ++ invited) |> Enum.dedup() |> Enum.sort()
+    matrix_members = (joined ++ invited) |> Enum.uniq() |> Enum.sort()
 
     users_to_add = authentik_members -- matrix_members
 
