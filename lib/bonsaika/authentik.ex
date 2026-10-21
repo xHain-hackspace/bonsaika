@@ -1,5 +1,4 @@
 defmodule Bonsaika.Authentik do
-  require Logger
   use Tesla
 
   plug(Tesla.Middleware.JSON)
