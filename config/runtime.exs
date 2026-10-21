@@ -12,3 +12,10 @@ config :bonsaika,
     |> System.fetch_env!()
     |> String.split(",", trim: true)
     |> Enum.map(&String.trim/1)
+
+config :bonsaika, Bonsaika.Scheduler,
+  jobs: [
+    update_member_channel: [
+      schedule: System.get_env("BONSAIKA_SCHEDULE", "*/2 * * * *")
+    ]
+  ]
