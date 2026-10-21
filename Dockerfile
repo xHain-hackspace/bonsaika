@@ -1,4 +1,4 @@
-FROM elixir:1.16-alpine as build
+FROM hexpm/elixir:1.19.6-erlang-28.5.0.8-alpine-3.24.2 AS build
 
 RUN mkdir /app
 WORKDIR /app
@@ -24,10 +24,11 @@ RUN mix compile
 # COPY rel rel
 RUN mix release
 
-FROM alpine:3.18 AS app
+# must use the same alpine version as the build image
+FROM alpine:3.24.2 AS app
 
 # install runtime dependencies
-RUN apk add --update bash && apk add libstdc++ openssl ca-certificates
+RUN apk add --no-cache bash libstdc++ openssl ncurses-libs ca-certificates
 
 ENV MIX_ENV=prod
 

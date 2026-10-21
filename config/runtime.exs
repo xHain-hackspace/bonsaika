@@ -1,9 +1,25 @@
 import Config
 
-config :bonsaika,
-  authentik_server: System.fetch_env!("BONSAIKA_AUTHENTIK_SERVER"),
-  authentik_token: System.fetch_env!("BONSAIKA_AUTHENTIK_TOKEN"),
-  matrix_server: System.fetch_env!("BONSAIKA_MATRIX_SERVER"),
-  matrix_token: System.fetch_env!("BONSAIKA_MATRIX_TOKEN"),
-  matrix_room: System.fetch_env!("BONSAIKA_MATRIX_ROOM"),
-  matrix_space: System.fetch_env!("BONSAIKA_MATRIX_SPACE")
+# The test environment uses fake settings from config/test.exs
+if config_env() != :test do
+  config :bonsaika,
+    authentik_server: System.fetch_env!("BONSAIKA_AUTHENTIK_SERVER"),
+    authentik_token: System.fetch_env!("BONSAIKA_AUTHENTIK_TOKEN"),
+    authentik_group: System.fetch_env!("BONSAIKA_AUTHENTIK_GROUP"),
+    matrix_server: System.fetch_env!("BONSAIKA_MATRIX_SERVER"),
+    matrix_token: System.fetch_env!("BONSAIKA_MATRIX_TOKEN"),
+    matrix_room: System.fetch_env!("BONSAIKA_MATRIX_ROOM"),
+    matrix_space: System.fetch_env!("BONSAIKA_MATRIX_SPACE"),
+    whitelist:
+      "BONSAIKA_WHITELIST"
+      |> System.fetch_env!()
+      |> String.split(",", trim: true)
+      |> Enum.map(&String.trim/1)
+
+  config :bonsaika, Bonsaika.Scheduler,
+    jobs: [
+      update_member_channel: [
+        schedule: System.get_env("BONSAIKA_SCHEDULE", "*/2 * * * *")
+      ]
+    ]
+end
