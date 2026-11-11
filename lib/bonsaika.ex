@@ -11,7 +11,7 @@ defmodule Bonsaika do
 
     users_to_add = authentik_members -- matrix_members
 
-    whitelist = Application.fetch_env!(:bonsaika, :whitelist)
+    whitelist = Application.fetch_env!(:bonsaika, :matrix_whitelist)
 
     users_to_remove =
       (matrix_members -- authentik_members) |> Enum.reject(fn member -> member in whitelist end)
