@@ -20,14 +20,36 @@ defmodule Bonsaika.Authentik do
     end)
   end
 
+  def list_rechenwerk_members() do
+    rechenwerk_group()
+      |> Map.fetch!("users_obj")
+      |> Enum.map(fn user -> rechenwerk_user(user)
+      end)
+      |> Enum.filter(fn 
+        {:ok, _value} -> true
+        _other -> false
+      end)
+      |> Enum.map(fn {:ok, value} -> value end)
+  end
+
   defp member_group() do
-    group = Application.fetch_env!(:bonsaika, :authentik_group)
+    group = Application.fetch_env!(:bonsaika, :authentik_member_group)
 
     # there should be only one result when searching for the group
     get!("/core/groups/", query: [name: group]).body
     |> Map.fetch!("results")
     |> Enum.at(0)
   end
+
+  defp rechenwerk_group() do
+    group = Application.fetch_env!(:bonsaika, :authentik_dev_group)
+
+    # there should be only one result when searching for the group
+    get!("/core/groups/", query: [name: group]).body
+    |> Map.fetch!("results")
+    |> Enum.at(0)
+  end
+
 
   defp matrix_user(user) do
     case external_matrix_account(user) do
@@ -44,5 +66,11 @@ defmodule Bonsaika.Authentik do
     user
     |> Map.fetch!("attributes")
     |> Map.fetch("external-matrix-account")
+  end
+  
+  defp rechenwerk_user(user) do
+    user
+    |> Map.fetch!("attributes")
+    |> Map.fetch("codeberg-account")
   end
 end
