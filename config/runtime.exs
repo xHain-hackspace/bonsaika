@@ -16,8 +16,14 @@ if config_env() != :test do
     forjego_server: System.fetch_env!("BONSAIKA_FORJEGO_SERVER"),
     forjego_team: System.fetch_env!("BONSAIKA_FORJEGO_TEAM_ID"),
 
-    whitelist:
-      "BONSAIKA_WHITELIST"
+    matrix_whitelist:
+      "BONSAIKA_MATRIX_WHITELIST"
+      |> System.fetch_env!()
+      |> String.split(",", trim: true)
+      |> Enum.map(&String.trim/1),
+    
+    codeberg_whitelist:
+      "BONSAIKA_CODEBERG_WHITELIST"
       |> System.fetch_env!()
       |> String.split(",", trim: true)
       |> Enum.map(&String.trim/1)
